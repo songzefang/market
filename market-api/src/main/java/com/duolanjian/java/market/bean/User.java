@@ -4,11 +4,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.apache.commons.lang.StringUtils;
-
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.annotation.JSONField;
 import com.duolanjian.java.market.exception.InvalidArgumentException;
 import com.duolanjian.java.market.exception.InvalidHttpArgumentException;
+import com.duolanjian.java.market.util.StringUtil;
 import com.duolanjian.java.market.validation.IsInt;
 import com.duolanjian.java.market.validation.IsString;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -33,8 +33,12 @@ public class User {
 	@IsString(minLength=1,maxLength=15)
 	private String qq;
 	
+	@JSONField (format="yyyy-MM-dd HH:mm:ss")
 	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
 	private Date createTime;
+	
+	@IsInt(min=0,max=3)
+	private Integer role;
 
 	public Long getId() {
 		return id;
@@ -88,22 +92,37 @@ public class User {
 		return createTime;
 	}
 
+	public Integer getRole() {
+		return role;
+	}
+
+	public void setRole(Integer role) {
+		this.role = role;
+	}
+
 	public void setCreateTime(String createTime) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		try {
 			this.createTime = sdf.parse(createTime);
 		} catch (ParseException e) {
-			throw new InvalidHttpArgumentException("invalid params.beginTime parse error.");
+			throw new InvalidHttpArgumentException("invalid params.createTime parse error.");
 		}
 	}
 	
 	public void check() {
-		if(StringUtils.isEmpty(mobile)) {
+		if(StringUtil.isEmpty(mobile)) {
 			throw new InvalidArgumentException("手机号不能为空");
 		}
 		
-		if(StringUtils.isEmpty(password)) {
+		if(StringUtil.isEmpty(password)) {
 			throw new InvalidArgumentException("密码不能为空");
+		}
+	}
+	
+	public void checkLevel(int level) {
+		
+		if(level <= this.role) {
+			throw new InvalidArgumentException("权限不够");
 		}
 	}
 

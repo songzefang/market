@@ -213,6 +213,13 @@
     </dependencies>  
   <build>
 		<plugins>
+			<plugin>
+		        <groupId>org.apache.maven.plugins</groupId>
+		        <artifactId>maven-surefire-plugin</artifactId>
+		        <configuration>
+		            <skip>true</skip>
+		        </configuration>
+		    </plugin>
 			<plugin>  
                 <groupId>org.mortbay.jetty</groupId>  
                 <artifactId>jetty-maven-plugin</artifactId>  
@@ -244,6 +251,7 @@
                 </configuration>  
             </plugin> 
 		</plugins>
-		<finalName>org.zsl.hnust</finalName>
+		<finalName>market-api</finalName>
 	</build>
+  <packaging>war</packaging>
 </project>

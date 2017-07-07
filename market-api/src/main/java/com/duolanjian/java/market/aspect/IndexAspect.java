@@ -1,7 +1,6 @@
 package com.duolanjian.java.market.aspect;
 
 import java.lang.reflect.Method;
-import java.sql.Time;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -113,6 +112,7 @@ public class IndexAspect {
             }
             if (ticket != null && !"".equals(ticket)) {
                 try {
+                	System.out.println("key: " + RedisNameSpace.LOGIN + ticket);
                     loginInfo = JSON.parseObject(jedisUtil.get(RedisNameSpace.LOGIN + ticket), User.class);
                 } catch(Exception e) {
                     throw new NeedAuthorizationException(RedisNameSpace.LOGIN_URL);

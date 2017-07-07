@@ -13,11 +13,12 @@
 		<result property="sex" column="sex" />
 		<result property="qq" column="qq" />
 		<result property="createTime" column="create_time" />
+		<result property="role" column="role" />
 	</resultMap>
 	
     <insert id="insert" parameterType="User" useGeneratedKeys="true" keyProperty="id">
-		INSERT INTO t_user(`mobile`, `username`, `password`, `create_time`, `sex`, `qq`) 
-		VALUES(#{mobile}, #{username}, #{password}, #{createTime}, #{sex}, #{qq})
+		INSERT INTO t_user(`mobile`, `username`, `password`, `create_time`, `sex`, `qq`, `role`) 
+		VALUES(#{mobile}, #{username}, #{password}, #{createTime}, #{sex}, #{qq}, #{role})
 	</insert>
 	<select id="selectOne" parameterType="Map" resultMap="userMap">
 		SELECT * 
@@ -56,7 +57,8 @@
 		    `password` = #{password},
 		    `create_time` = #{createTime},
 		    `sex` = #{sex},
-		    `qq` = #{qq}
+		    `qq` = #{qq},
+		    `role` = #{role}
 		WHERE pk_id = #{id}
 	</update>
 

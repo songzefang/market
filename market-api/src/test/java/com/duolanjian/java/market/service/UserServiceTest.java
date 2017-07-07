@@ -30,21 +30,24 @@ public class UserServiceTest {
 	
 	String mobile = "13011265819";
 	String username = "chenlisong";
-	String password = "chenlisong123";
+	String password = "chenlisong";
 	String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 	String qq = "291382932";
 	int sex = 1;
+	int role = 1;
 	
-	@Test
+//	@Test
 	public void insert() {
 		
 		User user = new User();
 		user.setUsername("chenlisong");
 		user.setMobile(mobile);
-		user.setPassword(md5Util.string2MD5(password));
+		user.setPassword(md5Util.convertMD5(password));
+		System.out.println(md5Util.string2MD5(password));
 		user.setCreateTime(date);
 		user.setQq(qq);
 		user.setSex(sex);
+		user.setRole(1);
 		log.info("insert user:"+user);
 		
 		try{
@@ -58,5 +61,28 @@ public class UserServiceTest {
 			Assert.assertTrue(false);
 		}
 	}
+	
+//	@Test
+	public void selectByMobile() {
+		User user = userService.selectByMobile(mobile);
+		System.out.println(user);
+	}
+	
+	@Test
+	public void delete() {
+		User user = userService.selectByMobile(mobile);
+		userService.delete(user.getId());
+		
+	}
 
+//	@Test
+	public void update() {
+		
+		User user = userService.selectByMobile(mobile);
+		user.setSex(2);
+		user.setRole(3);
+		userService.update(user);
+	}
+	
+	
 }

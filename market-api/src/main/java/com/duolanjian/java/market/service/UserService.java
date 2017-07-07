@@ -1,7 +1,7 @@
 package com.duolanjian.java.market.service;
 
 import java.util.Date;
-
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,12 +43,20 @@ public class UserService {
 		return userMapper.selectByMobile(mobile);
 	}
 	
+	public List<User> selectListByPage(int page, int pageSize) {
+		return userMapper.selectListByPage(pageSize, (page-1)*pageSize);
+	}
+	
 	public User selectOne(long id) {
 		return userMapper.selectOne(id);
 	}
 	
 	public void delete (long id) {
 		userMapper.delete(id);
+	}
+	
+	public void update(User user) {
+		userMapper.update(user);
 	}
 	
 }

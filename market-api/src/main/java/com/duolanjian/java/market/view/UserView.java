@@ -12,6 +12,11 @@ public class UserView extends HashMap<String, Object> {
 	public UserView(User user) {
 		put("id", user.getId());
 		put("mobile", user.getMobile());
+		put("username", user.getUsername());
+		put("sex", user.getSex());
+		put("qq", user.getQq());
+		put("role", user.getRole());
+		
 		put("createTime", DateTool.standardSdf.format(user.getCreateTime()));
 	}
 	
