@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.duolanjian.java.market.mapper.CartMapper">
+
+    <resultMap id="cartMap" type="Cart">
+		<result property="id" column="pk_id" />
+		<result property="userId" column="fk_user_id" />
+		<result property="commodityId" column="fk_commodity_id" />
+		<result property="shopId" column="fk_shop_id" />
+		<result property="number" column="number" />
+	</resultMap>
+	
+	<insert id="insert"   parameterType="Cart">
+		INSERT INTO t_cart(`fk_user_id`,`fk_commodity_id`,`fk_shop_id`,`number`) 
+		VALUES( #{userId}, #{commodityId},#{shopId},#{number})
+	</insert>
+	
+	<update id="update" parameterType="Cart">
+		UPDATE t_cart
+		SET `number` = #{number}
+		WHERE pk_id = #{id}
+	</update>
+	
+	<select id="selectAll" parameterType="Map" resultMap="cartMap">
+		SELECT *
+		FROM t_cart
+		WHERE fk_user_id= #{id}
+	</select>
+	
+	<select id="selectOne" parameterType="map" resultMap="cartMap">
+		SELECT *
+		FROM t_cart
+		WHERE pk_id= #{id}
+    </select>
+	
+	<select id="selectShopId" parameterType="Map" resultType="Long">
+		SELECT DISTINCT fk_shop_id
+		FROM t_cart
+		WHERE fk_user_id= #{id}
+	</select>
+	
+	<delete id="delete" parameterType="Map">
+		delete from t_cart
+		where pk_id =#{id}
+	</delete>
+    
+</mapper>

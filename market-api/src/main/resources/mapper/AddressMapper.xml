@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.duolanjian.java.market.mapper.AddressMapper">
+
+	<resultMap id="addressMap" type="Address">
+		<result property="id" column="pk_id" />
+		<result property="adress" column="adress" />
+		<result property="drom" column="drom" />
+		<result property="xy" column="xy" />
+		<result property="type" column="type" />
+		<result property="userId" column="fk_user_id" />
+		<result property="shopId" column="fk_shop_id" />
+		<result property="bindTime" column="bind_time" />
+	</resultMap>
+	
+    <insert id="insert" parameterType="Address" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO t_address(`adress`, `drom`, `xy`, `type`, `fk_user_id`, `fk_shop_id`,`bind_time`) 
+		VALUES(#{adress}, #{drom}, #{xy}, #{type}, #{userId}, #{shopId}, #{bindTime})
+	</insert>
+	<select id="selectOne" parameterType="Map" resultMap="addressMap">
+		SELECT * 
+		FROM t_address
+		WHERE pk_id = #{id}
+	</select>
+	
+	<select id="selectListByPage" parameterType="Map" resultMap="addressMap">
+        SELECT * 
+        FROM t_address
+        order by pk_id desc
+        LIMIT #{limit}
+        OFFSET #{offset}
+    </select>
+    <select id="selectListByIds" parameterType="Map" resultMap="addressMap">
+        SELECT * 
+        FROM t_address
+        WHERE pk_id IN
+	    <foreach item="item" index="index" collection="ids" open="(" separator="," close=")">
+	        #{item}
+	    </foreach>
+    </select>
+    <select id="countListByIds" parameterType="Map" resultType="Integer">
+        SELECT count(1)
+        FROM t_address
+        WHERE pk_id IN
+	    <foreach item="item" index="index" collection="ids" open="(" separator="," close=")">
+	        #{item}
+	    </foreach>
+    </select>
+    <update id="update" parameterType="Address">
+		UPDATE t_address
+		SET `adress` = #{adress},
+		    `dorm` = #{dorm},
+		    `bind_time`= #{bindTime}
+		WHERE pk_id = #{id}
+	</update>
+    
+
+	<delete id="delete" parameterType="Map">
+		delete from t_address
+		where pk_id = #{id}
+	</delete>
+	
+	<delete id="deleteAll">
+		delete from t_address
+    </delete>
+    <select id="selectListShop" parameterType="Map" resultMap="addressMap">
+        SELECT * 
+        FROM t_address
+        WHERE adress=#{adress} AND type=2
+        order by pk_id desc
+        LIMIT #{limit}
+        OFFSET #{offset}
+    </select>
+	
+	
+    
+</mapper>

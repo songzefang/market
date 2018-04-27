@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.duolanjian.java.market.mapper.OrderDetailMapper">
+
+    <resultMap id="orderDetailMap" type="OrderDetail">
+		<result property="id" column="pk_id" />
+		<result property="commodityId" column="fk_commodity_id" />
+		<result property="orderId" column="fk_order_id" />
+		<result property="number" column="number" />
+		<result property="name" column="name" />
+		<result property="price" column="price" />
+	</resultMap>
+	
+	<insert id="insert"   parameterType="OrderDetail">
+		INSERT INTO t_order_detail(`fk_commodity_id`,`fk_order_id`,`number`,`name`,`price`) 
+		VALUES(#{commodityId}, #{orderId},#{number},#{name},#{price})
+	</insert>
+
+	<select id="select" parameterType="Map" resultMap="orderDetailMap">
+		SELECT * 
+		FROM t_order_detail
+		WHERE fk_order_Id = #{id}
+	</select>
+	
+    
+</mapper>

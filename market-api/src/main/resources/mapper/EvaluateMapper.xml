@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.duolanjian.java.market.mapper.EvaluateMapper">
+
+	<resultMap id="evaluateMap" type="Evaluate">
+		<result property="id" column="pk_id" />
+		<result property="content" column="content" />
+		<result property="createTime" column="create_time" />
+		<result property="append" column="content_append" />
+		<result property="appendTime" column="append_time" />
+		<result property="grade" column="grade" />
+		<result property="orderId" column="fk_order_id" />
+	</resultMap>
+	<insert id="insert" parameterType="Evaluate" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO  t_evaluate(`content`, `create_time`, `grade`,`content_append`,`append_time`,`fk_order_id`) 
+		VALUES(#{content}, #{createTime}, #{grade}, #{append}, #{appendTime}, #{orderId})
+	</insert>
+
+	<select id="selectOne" parameterType="Map" resultMap="evaluateMap">
+		SELECT * 
+		FROM t_evaluate
+		WHERE pk_id = #{id}
+	</select>
+	
+	<select id="selectListByPage" parameterType="Map" resultMap="evaluateMap">
+        SELECT * 
+        FROM t_evaluate
+        order by pk_id desc
+        LIMIT #{limit}
+        OFFSET #{offset}
+    </select>
+    <select id="selectListByIds" parameterType="Map" resultMap="evaluateMap">
+        SELECT * 
+        FROM t_evaluate
+        WHERE pk_id IN
+	    <foreach item="item" index="index" collection="ids" open="(" separator="," close=")">
+	        #{item}
+	    </foreach>
+    </select>
+    <select id="countListByIds" parameterType="Map" resultType="Integer">
+        SELECT count(1)
+        FROM t_evaluate
+        WHERE pk_id IN
+	    <foreach item="item" index="index" collection="ids" open="(" separator="," close=")">
+	        #{item}
+	    </foreach>
+    </select>
+
+	<update id="update" parameterType="Evaluate">
+		UPDATE t_evaluate
+		SET `content_append` = #{append},
+		    `append_time` = #{appendTime}
+		WHERE pk_id = #{id}
+	</update>
+
+	<delete id="delete" parameterType="Map">
+		delete from t_evaluate
+		where pk_id = #{id}
+	</delete>
+	
+	<delete id="deleteAll">
+		delete from t_evaluate
+    </delete>
+	
+	<select id="selectOrderId" parameterType="Map" resultMap="evaluateMap">
+		SELECT * 
+		FROM t_evaluate
+		WHERE fk_order_id = #{orderId}
+	</select>
+    
+</mapper>

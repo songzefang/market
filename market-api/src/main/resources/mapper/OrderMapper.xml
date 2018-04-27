@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.duolanjian.java.market.mapper.OrderMapper">
+
+    <resultMap id="orderMap" type="Order">
+		<result property="id" column="pk_id" />
+		<result property="userId" column="fk_user_id" />
+		<result property="shopId" column="fk_shop_id" />
+		<result property="createTime" column="create_time" />
+		<result property="state" column="state" />
+		<result property="total" column="total" />
+		<result property="address" column="address" />
+		<result property="remarks" column="remarks" />
+		<result property="orderTime" column="order_time" />
+		<result property="deliveryTime" column="delivery_time" />
+		<result property="confirmTime" column="confirm_time" />
+		<result property="refundTime" column="refund_time" />
+		<result property="endTime" column="end_time" />
+	</resultMap>
+	
+	<insert id="insert"   parameterType="Order" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO t_order(`fk_user_id`,`fk_shop_id`,`create_time`,`state`,`total`, `address`, `remarks`,`order_time`,`delivery_time`,`confirm_time`,`refund_time`,`end_time`) 
+		VALUES( #{userId}, #{shopId},#{createTime},#{state},#{total},#{address},#{remarks},#{orderTime},#{deliveryTime},#{confirmTime},#{refundTime},#{endTime})
+	</insert>
+	
+	<select id="selectOne" parameterType="Map" resultMap="orderMap">
+		SELECT * 
+		FROM t_order
+		WHERE pk_id = #{id}
+	</select>
+
+	<select id="selectListByPage" parameterType="Map" resultMap="orderMap">
+        SELECT * 
+        FROM t_order
+        WHERE fk_user_id = #{userId}
+        order by fk_user_id DESC
+        LIMIT #{limit}
+        OFFSET #{offset}
+    </select>
+    
+   <update id="update" parameterType="Order">
+       UPDATE t_order
+       SET `state` = #{state},
+		   `order_time` = #{orderTime},
+	       `delivery_time` = #{deliveryTime},       
+           `confirm_time` = #{confirmTime},
+           `refund_time` = #{refundTime},
+           `end_time` = #{endTime}
+       WHERE pk_id = #{id}
+   
+   </update>
+	
+	<delete id="delete" parameterType="Map">
+		delete from t_order
+		where pk_id = #{id}
+	</delete>
+</mapper>

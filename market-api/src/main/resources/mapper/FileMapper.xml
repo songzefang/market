@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.duolanjian.java.market.mapper.FileMapper">
+
+	<resultMap id="fileMap" type="File">
+		<result property="id" column="pk_id" />
+		<result property="url" column="url" />
+	</resultMap>
+	
+    <insert id="insert" parameterType="File" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO t_file(`url`) 
+		VALUES(#{url})
+	</insert>
+	<select id="selectOne" parameterType="Map" resultMap="fileMap">
+		SELECT * 
+		FROM t_file
+		WHERE pk_id = #{id}
+	</select>
+	
+	<select id="selectListByPage" parameterType="Map" resultMap="fileMap">
+        SELECT * 
+        FROM t_file
+        order by pk_id desc
+        LIMIT #{limit}
+        OFFSET #{offset}
+    </select>
+    <select id="selectListByIds" parameterType="Map" resultMap="fileMap">
+        SELECT * 
+        FROM t_file
+        WHERE pk_id IN
+	    <foreach item="item" index="index" collection="ids" open="(" separator="," close=")">
+	        #{item}
+	    </foreach>
+    </select>
+    <select id="countListByIds" parameterType="Map" resultType="Integer">
+        SELECT count(1)
+        FROM t_file
+        WHERE pk_id IN
+	    <foreach item="item" index="index" collection="ids" open="(" separator="," close=")">
+	        #{item}
+	    </foreach>
+    </select>
+
+	<update id="update" parameterType="File">
+	</update>
+
+	<delete id="delete" parameterType="Map">
+		delete from t_file
+		where pk_id = #{id}
+	</delete>
+	
+	<delete id="deleteAll">
+		delete from t_file
+    </delete>
+	
+	
+    
+</mapper>

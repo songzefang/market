@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.duolanjian.java.market.mapper.ShopMapper">
+ 	
+ 	<resultMap id="shopMap" type="Shop">
+ 		<result property="id" column="pk_id"/>
+ 		<result property="name" column="name"/>
+ 		<result property="createTime" column="create_time"/>
+ 		<result property="openSchoolTime" column="open_school_time"/>
+ 		<result property="stopSchoolTime" column="stop_school_time"/>
+ 		<result property="openDormTime" column="open_dorm_time"/>
+ 		<result property="stopDormTime" column="stop_dorm_time"/>
+ 		<result property="addressId" column="fk_address_id"/>
+ 		<result property="fileId" column="fk_file_id"/>
+ 		<result property="userId" column="fk_user_id"/>
+ 	</resultMap>
+ 	
+ 	<insert id="insert" parameterType="Shop" useGeneratedKeys="true" keyProperty="id">
+ 		INSERT INTO t_shop(`name`, `create_time`, `open_school_time`, `stop_school_time`,`open_dorm_time`, `stop_dorm_time`, `fk_address_id`, `fk_file_id`, `fk_user_id`) 
+ 		VALUES(#{name}, #{createTime}, #{openSchoolTime}, #{stopSchoolTime},#{openDormTime}, #{stopDormTime}, #{addressId}, #{fileId}, #{userId})
+ 	</insert>
+ 	
+ 	<select id="selectOne" parameterType="Map" resultMap="shopMap">
+		SELECT * 
+		FROM t_shop
+		WHERE pk_id = #{id}
+	</select>
+	
+	<select id="selectListByPage" parameterType="Map" resultMap="shopMap">
+        SELECT * 
+        FROM t_shop
+        order by pk_id desc
+        LIMIT #{limit}
+        OFFSET #{offset}
+    </select>
+    
+    <select id="selectListByIds" parameterType="Map" resultMap="shopMap">
+        SELECT * 
+        FROM t_shop
+        WHERE pk_id IN
+	    <foreach item="item" index="index" collection="ids" open="(" separator="," close=")">
+	        #{item}
+	    </foreach>
+    </select>
+    
+    <select id="countListByIds" parameterType="Map" resultType="Integer">
+        SELECT count(1)
+        FROM t_shop
+        WHERE pk_id IN
+	    <foreach item="item" index="index" collection="ids" open="(" separator="," close=")">
+	        #{item}
+	    </foreach>
+    </select>
+    
+    <update id="update" parameterType="Shop">
+		UPDATE t_shop
+		SET `open_school_time` = #{openSchoolTime},
+		    `stop_school_time` =  #{stopSchoolTime},
+		    `open_dorm_time` = #{openDormTime},
+		    `stop_dorm_time` =  #{stopDormTime},
+		    `fk_address_id` = #{addressId},
+		    `fk_file_id` = #{fileId}
+		WHERE pk_id = #{id}
+	</update>
+
+	<delete id="delete" parameterType="Map">
+		delete from t_shop
+		where pk_id = #{id}
+	</delete>
+	
+	<delete id="deleteAll">
+		delete from t_shop
+    </delete>
+    <select id="selectUserId" parameterType="Map" resultMap="shopMap">
+    	SELECT *
+    	FROM t_shop
+    	WHERE fk_user_id=#{userId}
+    </select>
+    <select id="selectListName" parameterType="Map" resultMap="shopMap">
+        SELECT * 
+        FROM t_shop
+        WHERE name like CONCAT('%',#{name},'%') 
+        order by pk_id 
+        LIMIT #{limit}
+        OFFSET #{offset}
+    </select>
+ </mapper> 

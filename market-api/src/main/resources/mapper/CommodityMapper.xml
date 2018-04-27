@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.duolanjian.java.market.mapper.CommodityMapper">
+
+	<resultMap id="commodityMap" type="Commodity">
+		<result property="id" column="pk_id" />
+		<result property="name" column="name" />
+		<result property="type" column="type" />
+		<result property="state" column="state" />
+		<result property="sale" column="sale" />
+		<result property="price" column="price" />
+		<result property="fileId" column="fk_file_id" />
+		<result property="detail" column="detail" />
+		<result property="stock" column="stock" />
+		<result property="shopId" column="fk_shop_id" />
+	</resultMap>
+	
+    <insert id="insert" parameterType="Commodity" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO t_commodity(`name`, `type`, `state`, `sale`, `price`, `fk_file_id`, `detail`, `stock`, `fk_shop_id`) 
+		VALUES(#{name}, #{type}, #{state}, #{sale}, #{price}, #{fileId}, #{detail}, #{stock}, #{shopId})
+	</insert>
+	<select id="selectOne" parameterType="Map" resultMap="commodityMap">
+		SELECT * 
+		FROM t_commodity
+		WHERE pk_id = #{id}
+	</select>
+	
+	<select id="selectListByPage" parameterType="Map" resultMap="commodityMap">
+        SELECT * 
+        FROM t_commodity
+        order by pk_id desc
+        LIMIT #{limit}
+        OFFSET #{offset}
+    </select>
+    <select id="selectListByIds" parameterType="Map" resultMap="commodityMap">
+        SELECT * 
+        FROM t_commodity
+        WHERE pk_id IN
+	    <foreach item="item" index="index" collection="ids" open="(" separator="," close=")">
+	        #{item}
+	    </foreach>
+    </select>
+    <select id="countListByIds" parameterType="Map" resultType="Integer">
+        SELECT count(1)
+        FROM t_commodity
+        WHERE pk_id IN
+	    <foreach item="item" index="index" collection="ids" open="(" separator="," close=")">
+	        #{item}
+	    </foreach>
+    </select>
+    
+
+	<update id="update" parameterType="Commodity">
+		UPDATE t_commodity
+		SET `state` = #{state},
+		    `fk_file_id` = #{fileId},
+		    `detail` = #{detail},
+		    `stock` = #{stock}
+		WHERE pk_id = #{id}
+	</update>
+
+	<delete id="delete" parameterType="Map">
+		delete from t_commodity
+		where pk_id = #{id}
+	</delete>
+	
+	<delete id="deleteAll">
+		delete from t_commodity
+    </delete>
+    <select id="selectListName" parameterType="Map" resultMap="commodityMap">
+        SELECT * 
+        FROM t_commodity
+        WHERE name like CONCAT('%',#{name},'%') 
+        order by sale desc
+        LIMIT #{limit}
+        OFFSET #{offset}
+    </select>
+    <select id="selectListType" parameterType="Map" resultMap="commodityMap">
+        SELECT * 
+        FROM t_commodity
+        WHERE type=#{type} 
+        order by sale desc
+        LIMIT #{limit}
+        OFFSET #{offset}
+    </select>
+    <select id="selectListShopId" parameterType="Map" resultMap="commodityMap">
+        SELECT * 
+        FROM t_commodity
+        WHERE fk_shop_id = #{shopId}
+    </select>
+    <select id="selectAllShopId" parameterType="Map" resultMap="commodityMap">
+       SELECT * 
+        FROM t_commodity
+        WHERE fk_shop_id = #{shopId}
+    </select>
+	<update id="updateSale" parameterType="Map">
+		UPDATE t_commodity
+		SET `sale` = #{sale}
+		WHERE pk_id = #{id}
+	</update>
+</mapper>
