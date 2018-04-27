@@ -133,6 +133,8 @@ public class CommonUtil {
 							}
 						}else if(field.getType() == Long.class){
 							setMethod.invoke(obj,0l);	
+						}else if(field.getType() == Double.class){
+							setMethod.invoke(obj, 0.0);
 						}
 					}
 				}

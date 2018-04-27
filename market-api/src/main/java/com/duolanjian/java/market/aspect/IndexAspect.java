@@ -1,6 +1,8 @@
 package com.duolanjian.java.market.aspect;
 
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -19,6 +21,7 @@ import com.alibaba.fastjson.JSON;
 import com.duolanjian.java.market.bean.User;
 import com.duolanjian.java.market.exception.ExceptionHandlerMap;
 import com.duolanjian.java.market.exception.NeedAuthorizationException;
+import com.duolanjian.java.market.util.Constant.OpCode;
 import com.duolanjian.java.market.util.Constant.RedisNameSpace;
 import com.duolanjian.java.market.util.JedisUtil;
 import com.duolanjian.java.market.validation.NeedLogin;
@@ -47,9 +50,9 @@ public class IndexAspect {
 	 * 配置前置通知,使用在方法aspect()上注册的切入点
 	 * 同时接受JoinPoint切入点对象,可以没有该参数
 	 */
-	@SuppressWarnings({ "unused", "unchecked" })
 	@Around("aspect()")
 	public Object around(ProceedingJoinPoint pjp) throws Throwable {
+		long startTime = System.currentTimeMillis();
 		Object response = null;
         
         Object[] args = pjp.getArgs();
@@ -85,6 +88,7 @@ public class IndexAspect {
             }
         }
 
+        try {
         if (clazz.isAnnotationPresent(NeedLogin.class) || method.isAnnotationPresent(NeedLogin.class)) {
             ServletRequestAttributes sra = (ServletRequestAttributes)RequestContextHolder.getRequestAttributes();
             HttpServletRequest request = sra.getRequest();
@@ -120,7 +124,7 @@ public class IndexAspect {
             }
 
             if (loginInfo == null) {
-            	 throw new NeedAuthorizationException(RedisNameSpace.LOGIN_URL);
+            	 throw new NeedAuthorizationException("ticket过期，请重新登录");
             }else {
             	//刷新时间
             	jedisUtil.set(RedisNameSpace.LOGIN + ticket, JSON.toJSONString(loginInfo), RedisNameSpace.LOGIN_TIME);
@@ -137,7 +141,31 @@ public class IndexAspect {
         } else {
             argsModified = args;
         }
-        response = pjp.proceed(argsModified);
+		
+			response = pjp.proceed(argsModified);
+			Map<String, Object> castResponse;
+			if (response == null) {
+				response = new HashMap<String, Object>();
+			}
+
+			if (response instanceof Map) {
+				castResponse = (Map<String, Object>) response;
+				castResponse
+						.put("cost",
+								(double) (System.currentTimeMillis() - startTime) / 1000);
+				castResponse.put("code", OpCode.SUCCESS);
+			}
+		} catch (Exception e) {
+			Method methodE = exceptionHandlerMap.getMethod(e.getClass());
+			System.out.println("method:" + methodE.getName());
+			if (methodE != null) {
+				Object errorResponse = methodE.invoke(
+						exceptionHandlerMap.getExceptionHandler(methodE), e);
+				System.out.println("exceptionHandlerMap.getExceptionHandler(methodE):" + exceptionHandlerMap.getExceptionHandler(methodE));
+				return errorResponse;
+			}
+		}
+
         return response;
 	}
 	

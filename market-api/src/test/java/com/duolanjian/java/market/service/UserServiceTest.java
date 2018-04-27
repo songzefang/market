@@ -18,7 +18,7 @@ import com.duolanjian.java.market.util.MD5Util;
 @RunWith(SpringJUnit4ClassRunner.class)     //表示继承了SpringJUnit4ClassRunner类  
 @ContextConfiguration(locations = {"classpath:spring-mybatis.xml"})  
 public class UserServiceTest {
-
+	//在属性中使用 @Autowired 注释来除去 setter 方法
 	@Autowired
 	private UserService userService;
 	
@@ -49,26 +49,26 @@ public class UserServiceTest {
 		user.setSex(sex);
 		user.setRole(1);
 		log.info("insert user:"+user);
-		
+		//如果存在先删除在增加
 		try{
 			userService.deleteByMobile(mobile);
 			long id = userService.insert(user);
 			log.info("insert user id is " + id);
 			log.info("insert user id2 is " + user.getId());
-			Assert.assertTrue(true);
+			Assert.assertTrue(true);//查看运行结果是否为true。
 		}catch (Exception e) {
 			e.printStackTrace();
 			Assert.assertTrue(false);
 		}
 	}
 	
-//	@Test
+	@Test
 	public void selectByMobile() {
 		User user = userService.selectByMobile(mobile);
 		System.out.println(user);
 	}
 	
-	@Test
+//	@Test
 	public void delete() {
 		User user = userService.selectByMobile(mobile);
 		userService.delete(user.getId());
@@ -83,6 +83,7 @@ public class UserServiceTest {
 		user.setRole(3);
 		userService.update(user);
 	}
+
 	
 	
 }

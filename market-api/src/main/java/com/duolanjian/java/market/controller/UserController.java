@@ -69,14 +69,13 @@ public class UserController {
 			throw new InvalidArgumentException(e.getMessage());
 		}
 		user.setPassword(md5Util.convertMD5(user.getPassword()));
-		long id = userService.insert(user);
-		result.put("id", id);
+		userService.update(user);
 		return result;
     }
 
 	@NeedLogin
 	@RequestMapping(value="/users", method=RequestMethod.DELETE)
-    public Object get(User loginUser, @RequestParam Long id){
+    public Object delete(User loginUser, @RequestParam Long id){
 		
 		loginUser.checkLevel(3);
         Map<String, Object> result=new HashMap<String, Object>();

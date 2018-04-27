@@ -21,11 +21,11 @@ public class EmailUtil {
 	
 	@Autowired
 	private Config config;
-
+	
 	private Log log = LogFactory.getLog(EmailUtil.class);
 	
 	public boolean sendEmail(String email, String title, String content) {
-		
+	
 		boolean success = true;
 		try{
 			Properties props = new Properties();

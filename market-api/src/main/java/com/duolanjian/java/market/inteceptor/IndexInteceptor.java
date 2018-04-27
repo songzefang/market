@@ -19,6 +19,7 @@ public class IndexInteceptor implements HandlerInterceptor{
 
 	public boolean preHandle(HttpServletRequest arg0, HttpServletResponse arg1,
 			Object arg2) throws Exception {
+//		arg1.addHeader("Access-Control-Allow-Origin", "*");
 		return true;
 	}
 

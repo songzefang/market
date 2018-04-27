@@ -37,6 +37,18 @@ public class User {
 	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
 	private Date createTime;
 	
+	private Double money;
+	
+	private String pay;
+	
+	public Double getMoney() {
+		return money;
+	}
+
+	public void setMoney(Double money) {
+		this.money = money;
+	}
+
 	@IsInt(min=0,max=3)
 	private Integer role;
 
@@ -109,6 +121,14 @@ public class User {
 		}
 	}
 	
+	public String getPay() {
+		return pay;
+	}
+
+	public void setPay(String pay) {
+		this.pay = pay;
+	}
+
 	public void check() {
 		if(StringUtil.isEmpty(mobile)) {
 			throw new InvalidArgumentException("手机号不能为空");
@@ -121,7 +141,7 @@ public class User {
 	
 	public void checkLevel(int level) {
 		
-		if(level <= this.role) {
+		if(level < this.role) {
 			throw new InvalidArgumentException("权限不够");
 		}
 	}
